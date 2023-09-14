@@ -1,0 +1,31 @@
+.container {
+  display: flex;
+  width: 100vw;
+}
+
+.input {
+  flex: 1;
+}
+
+.output {
+  color: white;
+  flex: 1;
+}
+
+.output>.white-line {
+  height: 19px;
+  line-height: 19px;
+}
+
+.output>.line {
+  font-family: monospace;
+  white-space: pre;
+  height: 19px;
+  margin-block: 2px !important;
+}
+}
+
+p {
+  height: 19px;
+  margin-block: 2px !important;
+}
