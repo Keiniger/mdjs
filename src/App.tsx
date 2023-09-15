@@ -25,7 +25,7 @@ async function playgroundContext(lines) {
   for (let line of lines) {
     line = line.replace(/console.log/g, "");
     concatenatedStatements =
-      `${concatenatedStatements}\n\n${line}`;
+      `${concatenatedStatements}\n${line}`;
 
     let result;
     try {
