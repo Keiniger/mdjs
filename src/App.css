@@ -12,20 +12,15 @@
   flex: 1;
 }
 
-.output>.white-line {
-  height: 19px;
-  line-height: 19px;
-}
-
 .output>.line {
-  font-family: monospace;
+  font-family: Consolas, "Courier New", monospace;
   white-space: pre;
+  margin: 0;
   height: 19px;
-  margin-block: 2px !important;
-}
 }
 
-p {
-  height: 19px;
-  margin-block: 2px !important;
+hr.line {
+  border: none;
+  border-bottom: 1px solid white;
+  height: 10px !important;
 }

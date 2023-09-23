@@ -1,7 +1,8 @@
 import './App.css'
 import Editor from '@monaco-editor/react';
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import Markdown from 'markdown-to-jsx'
+import customEval from './utils/CustomEval';
 
 function handleEditorDidMount(_, monaco) {
   monaco.editor.defineTheme('my-theme', {
@@ -15,114 +16,122 @@ function handleEditorDidMount(_, monaco) {
   monaco.editor.setTheme('my-theme');
 }
 
-async function playgroundContext(lines) {
-  const linesResult = [];
+function processBeforeEval(linesBefore, currentLine) {
+  currentLine = currentLine
+    .replace(/console.log/g, "")
+    .replace(/alert/g, "");
 
-  let concatenatedStatements = ''
-  let lineNumber = -1
-  let lastError;
-
-  for (let line of lines) {
-    line = line.replace(/console.log/g, "");
-    concatenatedStatements =
-      `${concatenatedStatements}\n${line}`;
-
-    let result;
-    try {
-      result = eval(concatenatedStatements);
-      if (result instanceof Promise) {
-        const data = await result
-        let jsonString;
-        if (data.json) {
-          jsonString = await data.json()
-          result = JSON.stringify(jsonString, null, " ");
-        } else {
-          result = data;
-        };
-      }
-      if (result instanceof Object) {
-        result = JSON.stringify(result, null, " ");
-      }
-      concatenatedStatements = concatenatedStatements + ";'';";
-    } catch (error) {
-      if (error.message === "Unexpected end of input") continue;
-      linesResult.push('');
-      if (error.message === "Invalid or unexpected token") continue;
-      if (lastError?.message === error.message) continue;
-      result = "^ "+error;
-      lastError = error;
-    }
-
-    linesResult.push(result);
-
-    lineNumber++;
-  }
-
-  return linesResult;
+  return `${linesBefore}\n${currentLine}`;
 }
 
-function App() {
-  const [lines, setLines] = useState([]);
-  const [jsLines, setJsLines] = useState('');
-  const [mdLines, setMdLines] = useState('');
+async function evalJsLines(lines: string) {
+  if (!lines) return '';
+  const linesResult = [];
 
-  function handleEditorChange(value) {
-    setLines(value.split('\r\n'))
+  let concatenatedStatements = '';
+  let lastErrorMsg;
+
+  const splittedLines = lines.split('\r\n')
+  for (let line of splittedLines) {
+    try {
+      concatenatedStatements = processBeforeEval(concatenatedStatements, line);
+      const result = await customEval(concatenatedStatements);
+      if (!window.python) {
+        concatenatedStatements += ";'';";
+
+      }
+
+      linesResult.push(result);
+    } catch (error: unknown) {
+      if(window.python) continue;
+      if (!(error instanceof Error)) continue;
+
+      const errorMsg = error.message;
+
+      if (errorMsg === "Unexpected end of input") continue;
+      linesResult.push('');
+
+      if (lastErrorMsg === errorMsg || errorMsg === "Invalid or unexpected token") continue;
+      linesResult.push("^ " + error);
+
+      lastErrorMsg = errorMsg;
+    }
   }
 
-  function handleEditorChange2(value) {
-    setMdLines(value.split('\r\n'))
+  return linesResult.join(`\n`);
+}
+
+function evalMdLines(lines: string): ReactNode[] {
+  return lines.split('\n').map((line, i) =>
+    <Markdown className="line" key={i} options={{ forceBlock: true }}>
+      {String(line).toString()}
+    </Markdown>
+  );
+}
+
+
+function App() {
+  const [jsInput, setJsInput] = useState<string | undefined>('');
+  const [jsOutput, setJsOutput] = useState<string | undefined>('');
+  const [mdOutput, setMdOutput] = useState<ReactNode>();
+  const [seconds, setSeconds] = useState(0);
+  const [disableSetSeconds, setDisableSetSeconds] = useState(false);
+
+  function handleJsInputChange(lines?: string) {
+    setJsInput(lines);
+    setDisableSetSeconds(false);
+  }
+
+  function handleJsOutputChange(lines?: string) {
+    setJsOutput(lines);
+    setDisableSetSeconds(true);
   }
 
   useEffect(() => {
-
-    const processLines = async (lines) => {
-      let mdLines = [];
-      const results = await playgroundContext(lines);
-
-      for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
-        const currentLineEval = results[lineIndex] || '';
-
-        mdLines.push(<Markdown contentEditable className="line" key={lineIndex} options={{ forceBlock: true }}>{
-          // `[${lineIndex + 1}] ` +
-          String(currentLineEval).replace(/\n\n/g, '<br>').toString()}</Markdown>)
-      }
-
-      setJsLines(results.join(`
-`));
-      setMdLines(mdLines);
+    const processLines = async (lines?: string) => {
+      if (disableSetSeconds) return
+      setJsOutput(await evalJsLines(lines));
     }
+    processLines(jsInput);
+  }, [jsInput, seconds])
 
-    processLines(lines);
+  useEffect(() => {
+    const mdLines = evalMdLines(jsOutput)
+    setMdOutput(mdLines);
+  }, [jsOutput])
 
-  }, [lines])
+
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setSeconds(seconds => seconds + 1);
+  //   }, 1000);
+
+  //   return () => clearInterval(interval);
+  // }, []);
 
   return (
     <div className="container">
-      {/* Js input*/}
       <Editor
         className="input"
         width="33vw"
         height="100vh"
-        defaultLanguage="typescript"
+        defaultLanguage={window.python ? "python" : "javascript"}
         theme="'dark'"
         onMount={handleEditorDidMount}
-        onChange={handleEditorChange}
+        onChange={handleJsInputChange}
       />
-      {/* Js output*/}
       <Editor
         className="input"
         width="33vw"
         height="100vh"
         defaultLanguage="markdown"
         theme="'dark'"
-        value={jsLines}
+        value={jsOutput}
         onMount={handleEditorDidMount}
-        onChange={handleEditorChange2}
+        onChange={handleJsOutputChange}
       />
-      {/* Md */}
       <div className="output">
-        {mdLines}
+        {mdOutput}
       </div>
     </div>
   )
