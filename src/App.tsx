@@ -36,9 +36,9 @@ async function evalJsLines(lines: string) {
     try {
       concatenatedStatements = processBeforeEval(concatenatedStatements, line);
       const result = await customEval(concatenatedStatements);
+      
       if (!window.python) {
         concatenatedStatements += ";'';";
-
       }
 
       linesResult.push(result);
@@ -104,7 +104,7 @@ function App() {
   // useEffect(() => {
   //   const interval = setInterval(() => {
   //     setSeconds(seconds => seconds + 1);
-  //   }, 1000);
+  //   }, 6000);
 
   //   return () => clearInterval(interval);
   // }, []);
