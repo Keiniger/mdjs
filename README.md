@@ -2,6 +2,8 @@
 
 TODO:
 - [ ] Add support for more markup languages
+   - [ ] asciidoc
+   - [ ] orgmode
    - [ ] HTML
    - [ ] pug
    - [ ] jsx
