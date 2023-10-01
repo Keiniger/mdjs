@@ -1,4 +1,14 @@
+body,
+body>* {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 body {
-  margin: 0px !important;
   background-color: #202124;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
 }
