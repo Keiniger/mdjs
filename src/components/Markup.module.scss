@@ -1,0 +1,23 @@
+.output {
+  color: white;
+  flex: 1;
+
+  .line {
+    font-family: Consolas, "Courier New", monospace;
+    white-space: pre;
+    margin: 0;
+    height: 19px;
+  }
+
+  hr.line {
+    border: none;
+    border-bottom: 1px solid white;
+    height: 10px !important;
+  }
+
+  .dropdown {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }  
+}

@@ -1,0 +1,25 @@
+.appContainer {
+  .tabs {
+    align-self: stretch;
+    flex: 1;
+    color: white;
+    height: 30px;
+  }
+
+  .editors {
+    align-self: stretch;
+    height: calc(100vh - 30px);
+    max-height: calc(100vh - 30px);
+    display: flex;
+
+    & > * {
+      width: 33vw;
+      min-width: 200px;
+
+      &:not(:last-child) {
+        resize: horizontal;
+        overflow: auto;
+      }
+    }
+  }
+}
