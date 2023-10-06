@@ -7,6 +7,8 @@ TODO:
    - [ ] HTML
    - [ ] pug
    - [ ] jsx
+   - [ ] Plant uml:  https://plantuml.com/
+   - [ ] Mermaid: https://mermaid.js.org/#/
 - [ ] Add support for more programming languages
    - [ ] typescript
    - [ ] ruby
