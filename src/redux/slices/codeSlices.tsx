@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { TutorialText } from '../../utils/TutorialText';
 
 const code = "code";
 
@@ -25,7 +26,7 @@ type CodeState = {
 export const codeSlice = createSlice({
     name: code,
     initialState: {
-        code: "",
+        code: TutorialText,
         language: CodeLanguages.javascript
     },
     reducers: {

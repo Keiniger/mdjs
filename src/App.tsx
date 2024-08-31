@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
-import { selectText, updatedText } from './redux/slices/textSlice';
-import { selectCode } from './redux/slices/codeSlices';
-import { updatedMarkup } from './redux/slices/markupSlice';
-import { Text } from './components/Text';
-import { Code } from './components/Code';
-import { Markup } from './components/Markup';
-import { evalJsLines } from './utils/Javascript';
-import styles from './App.module.scss';
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { selectText, updatedText } from "./redux/slices/textSlice";
+import { selectCode } from "./redux/slices/codeSlices";
+import { updatedMarkup } from "./redux/slices/markupSlice";
+import { Text } from "./components/Text";
+import { Code } from "./components/Code";
+import { Markup } from "./components/Markup";
+import { evalJsLines } from "./utils/Javascript";
+import styles from "./App.module.scss";
 
 function App() {
   const code = useSelector(selectCode);
@@ -19,39 +19,38 @@ function App() {
 
   useEffect(() => {
     const processLines = async (lines?: string) => {
-      if (disableSetSeconds || !lines) return
-      const evaluatedJsLines = await evalJsLines(lines)
+      if (disableSetSeconds || !lines) return;
+      const evaluatedJsLines = await evalJsLines(lines);
       dispatch(updatedText(evaluatedJsLines));
-    }
+    };
 
     processLines(code);
-  }, [code, seconds])
+  }, [code, seconds]);
 
   useEffect(() => {
     dispatch(updatedMarkup(text));
-  }, [text])
+  }, [text]);
 
+  const Tabs = <div className={styles.tabs}>tabs</div>;
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setSeconds(seconds => seconds + 1);
-  //   }, 6000);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSeconds((seconds) => seconds + 1);
+    }, 6000);
 
-  //   return () => clearInterval(interval);
-  // }, []);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className={styles.appContainer}>
-      <div className={styles.tabs}>
-        tabs
-      </div >
+      {/*Tabs*/}
       <div className={styles.editors}>
         <Code setDisableSetSeconds={setDisableSetSeconds} />
         <Text setDisableSetSeconds={setDisableSetSeconds} />
         <Markup />
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

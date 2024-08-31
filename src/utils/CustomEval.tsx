@@ -22,7 +22,7 @@ function getFromCache(lines) {
     return promiseCache[normalizeLines(lines)];
 }
 
-export default async function customEval(lines) {
+export default async function customEval(lines: string) {
     let result;
     if (window.python) {
         result = pyodide.runPython(lines);
