@@ -1,4 +1,5 @@
 import { require, install } from './CustomRequire';
+import { mdjs } from './MdjsFunctions';
 
 const promiseCache = {};
 
@@ -29,6 +30,7 @@ export default async function customEval(lines: string) {
     } else {
         require;
         install;
+        mdjs;
 
         // if (isInCache(lines)) {
         //     result = getFromCache(lines);

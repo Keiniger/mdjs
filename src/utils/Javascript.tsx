@@ -1,7 +1,10 @@
 import customEval from "./CustomEval";
 
 export function processBeforeEval(linesBefore, currentLine) {
-  currentLine = currentLine.replace(/console.log/g, "").replace(/alert/g, "");
+  currentLine = currentLine
+    .replace(/console.log/g, "")
+    .replace(/alert/g, "")
+    .replace(/await/g, "");
 
   return `${linesBefore}\n${currentLine}`;
 }
@@ -14,7 +17,7 @@ export async function evalJsLines(lines: string) {
   let lastErrorMsg;
 
   const onWindows = window.navigator.userAgent.includes("indows");
-  const splittedLines = lines.split(onWindows ? "\r\n" : "\n" );
+  const splittedLines = lines.split(onWindows ? "\r\n" : "\n");
 
   for (const line of splittedLines) {
     try {
