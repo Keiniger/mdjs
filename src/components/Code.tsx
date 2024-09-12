@@ -27,13 +27,14 @@ export function Code({ setDisableSetSeconds }) {
   }
 
   function setLanguage(event: Event) {
-    const selectedLanguage = event?.target?.value;
+    const selectedLanguage = (event?.target as any).value;
 
     if (!(selectedLanguage in CodeLanguages)) return;
 
     dispatch(updatedLanguage({ code, language: selectedLanguage }));
   }
 
+  /*
   const Dropdown = (
     <VSCodeDropdown
       className={styles.dropdown}
@@ -44,6 +45,7 @@ export function Code({ setDisableSetSeconds }) {
       ))}
     </VSCodeDropdown>
   );
+  */
 
   return (
     <div>

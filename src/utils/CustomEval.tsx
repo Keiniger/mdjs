@@ -24,10 +24,9 @@ function getFromCache(lines) {
 }
 
 export default async function customEval(lines: string) {
-    let result;
-    if (window.python) {
-        result = pyodide.runPython(lines);
-    } else {
+    // if (window.python) {
+        // result = pyodide.runPython(lines);
+    // } else {
         require;
         install;
         mdjs;
@@ -36,8 +35,8 @@ export default async function customEval(lines: string) {
         //     result = getFromCache(lines);
         // }
 
-        result = eval(lines);
-    }
+        const result = eval(lines);
+    // }
 
     if (!(result instanceof Promise)) {
         return result instanceof Object ? JSON.stringify(result, null, " ") : result;

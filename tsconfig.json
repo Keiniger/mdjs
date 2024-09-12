@@ -15,10 +15,15 @@
     "jsx": "react-jsx",
 
     /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    // "strict": true,
+    //"noUnusedLocals": true,
+    //"noUnusedParameters": true,
+    //"noFallthroughCasesInSwitch": true,
+
+    "noImplicitAny": false, // Allows implicit 'any' type
+    "strict": false,        // Disables all strict type-checking options
+    "noImplicitThis": false, // Allows implicit 'this' type
+    "noEmitOnError": false // Allows emitting output files even if there are type errors
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

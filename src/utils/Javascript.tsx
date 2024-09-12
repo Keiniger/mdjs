@@ -25,13 +25,13 @@ export async function evalJsLines(lines: string) {
 
       const result = await customEval(concatenatedStatements);
 
-      if (!window.python) {
-        concatenatedStatements += ";'';";
-      }
+      // if (!window?.python) {
+        // concatenatedStatements += ";'';";
+      // }
 
       linesResult.push(result);
     } catch (error: unknown) {
-      if (window.python) continue;
+      // if (window?.python) continue;
 
       if (!(error instanceof Error)) continue;
 
