@@ -26,7 +26,7 @@ export async function evalJsLines(lines: string) {
       const result = await customEval(concatenatedStatements);
 
       // if (!window?.python) {
-        // concatenatedStatements += ";'';";
+        concatenatedStatements += ";'';";
       // }
 
       linesResult.push(result);
