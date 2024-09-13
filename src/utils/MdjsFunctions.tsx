@@ -17,4 +17,6 @@ const mdjs = {
   quote: (s) => "> " + s,
 };
 
+(window as any).mdjs = mdjs
+
 export { mdjs };
