@@ -1,4 +1,5 @@
 import customEval from "./CustomEval";
+import { Endline } from "./Endline";
 
 export function processBeforeEval(linesBefore, currentLine) {
   currentLine = currentLine
@@ -6,7 +7,7 @@ export function processBeforeEval(linesBefore, currentLine) {
     .replace(/alert/g, "")
     .replace(/await/g, "");
 
-  return `${linesBefore}\n${currentLine}`;
+  return `${linesBefore}${Endline}${currentLine}`;
 }
 
 export async function evalJsLines(lines: string) {
@@ -16,8 +17,7 @@ export async function evalJsLines(lines: string) {
   let concatenatedStatements = "";
   let lastErrorMsg;
 
-  const onWindows = window.navigator.userAgent.includes("indows");
-  const splittedLines = lines.split(onWindows ? "\r\n" : "\n");
+  const splittedLines = lines.split(Endline);
 
   for (const line of splittedLines) {
     try {
@@ -50,5 +50,5 @@ export async function evalJsLines(lines: string) {
       lastErrorMsg = errorMsg;
     }
   }
-  return linesResult.join(`\n`);
+  return linesResult.join(Endline);
 }
